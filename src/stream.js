@@ -17,10 +17,10 @@ const transformData = (shift) => {
   });
 };
 
-export const runStream = async (input, output, shift) => {
+export const runStream = async (input, output, shift, action) => {
   await pipelineAsync(
     fs.createReadStream(input),
-    transformData(shift),
+    transformData(action === 'encode' ? shift : -shift),
     fs.createWriteStream(output, { flags: 'a' }),
   );
 };

@@ -1,40 +1,44 @@
-import { Command } from 'commander';
+import commander from 'commander';
+import process from 'process';
 import { coding } from './caesarCipher.js';
 import { runStream } from './stream.js';
 
-const program = new Command();
+const program = new commander.Command();
 program.version('0,0,1');
 
 const parseAction = (action) => {
-  if (action !== 'encode' || action !== 'decode') {
-    console.log('action must be encode or decode');
-    process.stderr;
+  if (!(action === 'encode' || action === 'decode')) {
+    throw new commander.InvalidArgumentError(
+      'action must be "encode" or "decode"',
+    );
   }
   return action;
 };
+
 const parseShift = (shift) => {
-  console.log(shift);
+  if (isNaN(+shift)) {
+    throw new commander.InvalidArgumentError('shift must be a number');
+  }
   return shift;
 };
 
 program
-  .option(
-    '-a, --action <decode, encode>',
+  .requiredOption(
+    '-a, --action <action>',
     'action type enum: encode/decode',
     parseAction,
   )
-  .option('-s, --shift <number>', 'shift type number', parseShift)
+  .requiredOption('-s, --shift <number>', 'shift type number', parseShift)
   .option('-i, --input <text>', 'path input file')
   .option('-o, --output <text>', 'path output file');
 
 program.parse();
 
 const options = program.opts();
-console.log(coding('A,B.?C D', 2), options);
 
 if (options.input && options.output) {
   try {
-    runStream(options.input, options.output, options.shift);
+    runStream(options.input, options.output, options.shift, options.action);
   } catch (err) {
     console.error(err.message);
   }

@@ -20,13 +20,14 @@ const decodeChar = (letter, shift) => {
 };
 
 const calcNewUpperChar = (letter, shift) => {
-  const newChar = (letter - 65 + shift) % 26;
+  // 84
+  const newChar = (+letter - 65 + +shift) % 26;
   const result = (newChar < 0 ? 91 : 65) + newChar;
   return result;
 };
 
 const calcNewLowerChar = (letter, shift) => {
-  const newChar = (letter - 97 + shift) % 26;
+  const newChar = (+letter - 97 + +shift) % 26;
   const result = (newChar < 0 ? 123 : 97) + newChar;
   return result;
 };
