@@ -1,7 +1,7 @@
 import commander from 'commander';
 import process from 'process';
 import { coding } from './caesarCipher.js';
-import { runStream } from './stream.js';
+import { runStream, validateFileExisting } from './stream.js';
 
 const program = new commander.Command();
 program.version('0,0,1');
@@ -36,10 +36,16 @@ program.parse();
 
 const options = program.opts();
 
-if (options.input && options.output) {
+if (options.input || options.output) {
   try {
-    runStream(options.input, options.output, options.shift, options.action);
+    await validateFileExisting(options.input, options.output);
+    await runStream(
+      options.input,
+      options.output,
+      options.shift,
+      options.action,
+    );
   } catch (err) {
-    console.error(err.message);
+    console.log('error', err.message);
   }
 }
