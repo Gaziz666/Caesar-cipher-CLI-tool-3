@@ -40,22 +40,19 @@ export const validateFileExisting = async (input, output) => {
 };
 
 export const runStream = async (input, output, shift, action) => {
-  console.log(input, output, shift, action);
   let readStream, writeStream;
   if (input) {
-    readStream = fs.createReadStream(input, (err) => {
-      console.log(err);
-      if (err.code === 'ENOENT') {
-        console.log('no access to output file');
-        throw err;
-      }
-    });
+    readStream = fs.createReadStream(input, () => {});
+  } else {
+    readStream = process.stdin;
   }
   if (output) {
     writeStream = fs.createWriteStream(output, {
       flags: 'a',
       encoding: 'utf-8',
     });
+  } else {
+    writeStream = process.stdout;
   }
   await pipelineAsync(
     readStream,

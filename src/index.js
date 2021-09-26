@@ -36,16 +36,9 @@ program.parse();
 
 const options = program.opts();
 
-if (options.input || options.output) {
-  try {
-    await validateFileExisting(options.input, options.output);
-    await runStream(
-      options.input,
-      options.output,
-      options.shift,
-      options.action,
-    );
-  } catch (err) {
-    console.log('error', err.message);
-  }
+try {
+  await validateFileExisting(options.input, options.output);
+  await runStream(options.input, options.output, options.shift, options.action);
+} catch (err) {
+  console.log('error', err.message);
 }
